@@ -1,0 +1,96 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table komplain {
+  komplain_id Int [pk, increment]
+  user_id Int [not null]
+  product_id Int [not null]
+  message String [not null]
+  created_at DateTime [not null]
+  product product [not null]
+}
+
+Table kurir_service {
+  kurir_service_id Int [pk, increment]
+  jenis_layanan String [not null]
+  status Int [not null, default: 0]
+  transaction_history transaction_history [not null]
+  users_kurir users_kurir [not null]
+}
+
+Table location {
+  id Int [pk, increment]
+  location String [not null]
+  users_kurir users_kurir [not null]
+}
+
+Table product {
+  product_id Int [pk, increment]
+  name String
+  category String
+  price BigInt
+  product_image String
+  quantity Int
+  created_at DateTime [not null]
+  updated_at DateTime
+  komplain komplain [not null]
+  transaction_history transaction_history [not null]
+}
+
+Table transaction_history {
+  transaction_id Int [pk, increment]
+  trx_code String [not null]
+  user_id Int [not null]
+  product_id Int [not null]
+  buy_date DateTime [not null]
+  status_buy Int [not null]
+  quantity Int [not null]
+  total_price Int [not null]
+  kurir_service_id Int
+  kurir_users Int
+  status_sending Int
+  created_at DateTime [not null]
+  updated_at DateTime
+  kurir_service kurir_service
+  users_kurir users_kurir
+  product product [not null]
+  users users [not null]
+}
+
+Table users {
+  id Int [pk, increment]
+  nama String [not null]
+  username String [unique, not null]
+  password String [not null]
+  email String
+  no_telp String
+  transaction_history transaction_history [not null]
+}
+
+Table users_kurir {
+  id Int [pk, increment]
+  nama String [not null]
+  username String [unique, not null]
+  password String [not null]
+  kurir_service_id Int [not null]
+  location_id Int [not null]
+  created_at DateTime [not null]
+  transaction_history transaction_history [not null]
+  kurir_service kurir_service [not null]
+  location location [not null]
+}
+
+Ref: komplain.product_id > product.product_id
+
+Ref: transaction_history.kurir_service_id > kurir_service.kurir_service_id [delete: Restrict]
+
+Ref: transaction_history.kurir_users > users_kurir.id [delete: Restrict]
+
+Ref: transaction_history.product_id > product.product_id
+
+Ref: transaction_history.user_id > users.id
+
+Ref: users_kurir.kurir_service_id > kurir_service.kurir_service_id
+
+Ref: users_kurir.location_id > location.id
